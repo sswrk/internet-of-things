@@ -40,22 +40,18 @@ def main():
 
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
-    floor = 'f1'
-    room = 'bathroom'
-
-    led1 = LED(21)
-    led2 = LED(22)
-
     button1 = Button(11)
+    led1 = LED(21)
     button1.when_pressed = led1.toggle
+
     button2 = Button(12)
+    led2 = LED(22)
     button2.when_pressed = led2.toggle
 
     while True:
         command = sock.recv(10240).decode("utf-8").split(';')
-        print(command)
-        if command[0] == floor or command[0] == '*':
-            if command[1] == room or command[1] == '*':
+        if command[0] == 'f1' or command[0] == '*':
+            if command[1] == 'bathroom' or command[1] == '*':
                 if command[2] == 'lamp' or command[2] == '*':
                     if command[3] == '1' or command[3] == '*':
                         if command[4] == 'on':
@@ -64,7 +60,7 @@ def main():
                             led1.off()
                         elif command[4] == 'change':
                             led1.toggle()
-                    if command[3] == '2' or command[3] == '*':
+                    elif command[3] == '2' or command[3] == '*':
                         if command[4] == 'on':
                             led2.on()
                         elif command[4] == 'off':

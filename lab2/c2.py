@@ -41,24 +41,20 @@ def main():
 
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
-    floor = 'f1'
-    room = 'kitchen'
-
-    def button2_pressed():
-        sock.sendto('f1;living_room;lamp;1;change'.encode('utf-8'), (MCAST_GRP, MCAST_PORT))
-
-    led = LED(21)
-
     button1 = Button(11)
+    led = LED(21)
     button1.when_pressed = led.toggle
 
+    def button2_press():
+        sock.sendto('f1;living_room;lamp;1;change'.encode('utf-8'), (MCAST_GRP, MCAST_PORT))
+
     button2 = Button(12)
-    button2.when_pressed = button2_pressed
+    button2.when_pressed = button2_press
+
     while True:
         command = sock.recv(10240).decode("utf-8").split(';')
-        print(command)
-        if command[0] == floor or command[0] == '*':
-            if command[1] == room or command[1] == '*':
+        if command[0] == 'f1' or command[0] == '*':
+            if command[1] == 'kitchen' or command[1] == '*':
                 if command[2] == 'lamp' or command[2] == '*':
                     if command[3] == '1' or command[3] == '*':
                         if command[4] == 'on':

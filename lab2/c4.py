@@ -37,17 +37,16 @@ def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 
-    def button2_pressed():
+    button1 = Button(11)
+    led = LED(21)
+    button1.when_pressed = led.toggle
+
+    def button2_press():
         sock.sendto('f1;*;lamp;*;off'.encode('utf-8'), (MCAST_GRP, MCAST_PORT))
         led.off()
 
-    led = LED(21)
-
-    button1 = Button(11)
-    button1.when_pressed = led.toggle
-
     button2 = Button(12)
-    button2.when_pressed = button2_pressed
+    button2.when_pressed = button2_press
 
     while True:
-        sleep(0.1)
+        sleep(1)
